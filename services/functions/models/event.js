@@ -6,6 +6,9 @@ const db = admin.firestore();
 
 exports.getEvents = () => getAllEvents();
 exports.getEventById = (id) => getEventById(id);
+exports.addEvent = (event) => addEvent(event);
+exports.updateEvent = (id, event) => updateEvent(id, event);
+exports.deleteEvent = (id) => deleteEvent(id);
 
 async function getAllEvents() {
     try {
@@ -52,11 +55,30 @@ async function getFirebaseDoc(docName) {
     }
 };
 
-async function setFirebaseDoc(updatedDoc) {
+async function addEvent(event) {
     try {
-        let docRef = db.collection(collectionName).doc(updatedDoc.id);
-        await docRef.set(updatedDoc.data);
-        return updatedDoc;
+        let doc = await db.collection('events').add(event);
+        let snapshot = await doc.get();
+        return { id: snapshot.id, ...snapshot.data() };
+    } catch (err) {
+        throw err;
+    }
+}
+
+async function updateEvent(id, udpatedEvent) {
+    try {
+        let docRef = db.collection('events').doc(id);
+        await docRef.set(udpatedEvent);
+        return udpatedEvent;
+    } catch (err) {
+        throw err;
+    }
+}
+
+async function deleteEvent(id) {
+    try {
+        var deletedDoc = db.collection('events').doc(id).delete();
+        return { id: id, deleted: true };
     } catch (err) {
         throw err;
     }

@@ -1,0 +1,11 @@
+{
+  "status": "success",
+  "result": {
+    "apiKey": "AIzaSyClONWiweEsXkhe495Im7_trlptR3ss6Eg",
+    "authDomain": "app-gregaria.firebaseapp.com",
+    "databaseURL": "https://app-gregaria.firebaseio.com",
+    "projectId": "app-gregaria",
+    "storageBucket": "app-gregaria.appspot.com",
+    "messagingSenderId": "359212362295"
+  }
+}

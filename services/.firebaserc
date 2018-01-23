@@ -1,5 +1,6 @@
 {
   "projects": {
-    "dev": "app-gregaria"
+    "dev": "app-gregaria",
+    "develop": "app-gregaria"
   }
 }

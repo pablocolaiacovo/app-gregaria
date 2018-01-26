@@ -5,6 +5,7 @@
 const functions = require("firebase-functions");
 const express = require("express");
 const admin = require("firebase-admin");
+const FieldValue = admin.firestore.FieldValue;
 
 const RESPONSE = {
   OK: {
@@ -109,6 +110,37 @@ app.post("/", (req, res) => {
 
           let response = RESPONSE.OK;
           response.payload = eventAdded;
+
+          res.json(response);
+        });
+      });
+  } catch (error) {
+    errorHandler(error, res);
+  }
+});
+
+/*
+* Endpoint to add collaborations to a particular event (:id)
+*/
+app.post("/:id/collaborations", (req, res) => {
+
+  console.log("Trying to add ", req.body, " to event id: ", req.params.id);
+
+  let id = req.params.id;
+  let collaboration = req.body;
+  Object.assign(collaboration, { date: FieldValue.serverTimestamp() });
+  try {
+    let event = db.collection(collectionName).doc(id);
+    event
+      .collection("collaborations")
+      .add(collaboration)
+      .then(snap => {
+        snap.get().then(doc => {
+          let collaborationAdded = doc.data();
+          Object.assign(collaborationAdded, { id: doc.id });
+
+          let response = RESPONSE.OK;
+          response.payload = collaborationAdded;
 
           res.json(response);
         });

@@ -77,13 +77,26 @@ app.get("/:id", (req, res) => {
         if (snap.exists) {
           let event = snap.data();
           Object.assign(event, { id: id });
-          let response = RESPONSE.OK;
-          response.payload = event;
-          res.json(response);
+          // get the collaboratiosn and append them to the event object
+          snap.ref
+            .collection("collaborations")
+            .get()
+            .then(collsSnap => {
+              let collaborations = [];
+              collsSnap.forEach(doc => {
+                let collaboration = doc.data();
+                collaborations.push(collaboration);
+                Object.assign(event, { collaborations: collaborations });
+              });
+
+              let response = RESPONSE.OK;
+              response.payload = event;
+              return res.json(response);
+            });
         } else {
           let response = RESPONSE.ERROR;
           response.error = "No event found";
-          res.json(response);
+          return res.json(response);
         }
       });
   } catch (error) {
@@ -123,7 +136,6 @@ app.post("/", (req, res) => {
 * Endpoint to add collaborations to a particular event (:id)
 */
 app.post("/:id/collaborations", (req, res) => {
-
   console.log("Trying to add ", req.body, " to event id: ", req.params.id);
 
   let id = req.params.id;

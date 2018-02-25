@@ -1,6 +1,5 @@
 {
   "projects": {
-    "dev": "app-gregaria",
-    "develop": "app-gregaria"
+    "default": "app-gregaria"
   }
 }
